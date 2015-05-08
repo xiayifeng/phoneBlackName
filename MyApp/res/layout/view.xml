@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:padding="10dip"
+        >
+
+    <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/filepath"
+            android:hint="@string/mark_file_selector"
+            android:focusable="false"
+            />
+
+    <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/importbutton"
+            android:text="@string/mark_import"
+            />
+
+    <Button android:id="@+id/contactlist"
+            android:text="@string/mark_contacts_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="30dip">
+        <TextView
+                android:layout_marginLeft="10dip"
+                android:textSize="20sp"
+                android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="@string/mark_mode"/>
+        <RadioGroup
+                android:id="@+id/mode_rg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="@string/mark_black_name_mode"
+                    android:paddingLeft="5dip" android:id="@+id/mode_rb_black"
+                    />
+            <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="@string/mark_white_name_mode"
+                    android:paddingLeft="5dip" android:id="@+id/mode_rb_white"
+                    />
+        </RadioGroup>
+    </LinearLayout>
+
+</LinearLayout>

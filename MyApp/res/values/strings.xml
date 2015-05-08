@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">myApp</string>
+
+    <string name="mark_import">import</string>
+    <string name="mark_file_selector">choose a contact file</string>
+    <string name="mark_black_name_mode">black name mode</string>
+    <string name="mark_white_name_mode">white name mode</string>
+    <string name="mark_mode">mode</string>
+    <string name="mark_contacts_list">contacts list</string>
+
+</resources>
