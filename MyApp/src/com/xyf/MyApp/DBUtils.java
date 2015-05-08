@@ -98,9 +98,11 @@ public class DBUtils {
                 HashMap<String,String> map = new HashMap<String, String>();
                 String username = c.getString(c.getColumnIndex(DBCol.COL_NAME));
                 String userphone = c.getString(c.getColumnIndex(DBCol.COL_PHONE));
+                String useremail = c.getString(c.getColumnIndex(DBCol.COL_EMAIL));
 
                 map.put(DBCol.COL_NAME,username);
                 map.put(DBCol.COL_PHONE,userphone);
+                map.put(DBCol.COL_EMAIL,useremail);
                 result.add(map);
             }while (c.moveToNext());
 
@@ -124,10 +126,12 @@ public class DBUtils {
         if(c.moveToFirst()){
             String username = c.getString(c.getColumnIndex(DBCol.COL_NAME));
             String userphone = c.getString(c.getColumnIndex(DBCol.COL_PHONE));
+            String useremail = c.getString(c.getColumnIndex(DBCol.COL_EMAIL));
 
             HashMap<String,String> result = new HashMap<String, String>();
             result.put(DBCol.COL_NAME,username);
             result.put(DBCol.COL_PHONE,userphone);
+            result.put(DBCol.COL_EMAIL,useremail);
 
             c.close();
             db.close();
@@ -147,6 +151,7 @@ public class DBUtils {
         public static final String TABLENAME = "companyphone";
         public static final String COL_NAME = "username";
         public static final String COL_PHONE = "userphone";
+        public static final String COL_EMAIL = "useremail";
     }
 
 
@@ -165,6 +170,7 @@ public class DBUtils {
             String sql = "CREATE TABLE " + DBCol.TABLENAME + " ("
                     + DBCol._ID + " INTEGER PRIMARY KEY,"
                     + DBCol.COL_NAME + " TEXT,"
+                    + DBCol.COL_EMAIL + " TEXT,"
                     + DBCol.COL_PHONE + " TEXT NOT NULL)";
             sqLiteDatabase.execSQL(sql);
         }

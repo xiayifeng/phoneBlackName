@@ -106,12 +106,13 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
                     while ((line = br.readLine()) != null){
                         Log.e("xyf",String.format("line(%s)",line));
                         String[] users = line.split(",");
-                        if (users.length != 2){
+                        if (users.length != 3){
                             continue;
                         }
                         ContentValues contentValues = new ContentValues();
                         contentValues.put(DBUtils.DBCol.COL_NAME,users[0]);
                         contentValues.put(DBUtils.DBCol.COL_PHONE,users[1]);
+                        contentValues.put(DBUtils.DBCol.COL_EMAIL,users[2]);
                         DBUtils.getInstances().insertDB(contentValues);
                     }
                     br.close();
