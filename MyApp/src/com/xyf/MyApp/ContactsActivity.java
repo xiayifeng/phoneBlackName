@@ -7,12 +7,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,6 +24,8 @@ import java.util.List;
 public class ContactsActivity extends ListActivity implements AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener{
 
     private List<HashMap<String ,String >> dbvalues;
+
+    private static final int FUN_KEY = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,21 @@ public class ContactsActivity extends ListActivity implements AdapterView.OnItem
         super.onDestroy();
     }
 
+    private List<HashMap<String,String>> searchMessage(String message){
+        List<HashMap<String,String>> result = new ArrayList<HashMap<String, String>>();
+        for (HashMap<String,String> map : dbvalues){
+            String name = map.get(DBUtils.DBCol.COL_NAME);
+            String phone = map.get(DBUtils.DBCol.COL_PHONE);
+            String email = map.get(DBUtils.DBCol.COL_EMAIL);
+
+            if (name.contains(message) || phone.contains(message) || email.contains(message)) {
+                result.add(map);
+            }
+        }
+
+        return result;
+    }
+
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, final int ii, long l) {
         if ( ii == 0 ){
@@ -90,9 +109,38 @@ public class ContactsActivity extends ListActivity implements AdapterView.OnItem
 
                             ContentValues cValue = new ContentValues();
                             cValue.put(DBUtils.DBCol.COL_NAME,name);
-                            cValue.put(DBUtils.DBCol.COL_PHONE,phone);
+                            cValue.put(DBUtils.DBCol.COL_PHONE, phone);
                             DBUtils.getInstances().insertDB(cValue);
                             parseListView();
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    })
+                    .setCancelable(false)
+                    .create().show();
+        }else if(ii == 1){
+            View contentView = LayoutInflater.from(this).inflate(com.xyf.MyApp.R.layout.search,null);
+            final EditText searchMessage = (EditText) contentView.findViewById(com.xyf.MyApp.R.id.search_edit);
+            new AlertDialog.Builder(this).setTitle("Search")
+                    .setView(contentView)
+                    .setPositiveButton("search", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            String message = searchMessage.getText().toString().trim();
+                            if(TextUtils.isEmpty(message)){
+                                return;
+                            }
+
+                            List<HashMap<String,String>> result = searchMessage(message);
+                            if (result.size() > 0){
+                                ((MyApplication)getApplication()).setSearchReuslt(result);
+                                Intent intent = new Intent(ContactsActivity.this,SearchActivity.class);
+                                ContactsActivity.this.startActivity(intent);
+                            }
                         }
                     })
                     .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -111,14 +159,14 @@ public class ContactsActivity extends ListActivity implements AdapterView.OnItem
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent intent = new Intent();
                             intent.setAction(Intent.ACTION_DIAL);
-                            intent.setData(Uri.parse("tel:"+dbvalues.get(ii-1).get(DBUtils.DBCol.COL_PHONE)));
+                            intent.setData(Uri.parse("tel:"+dbvalues.get(ii-FUN_KEY).get(DBUtils.DBCol.COL_PHONE)));
                             startActivity(intent);
                         }
                     })
                     .setNegativeButton("email", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            String email = dbvalues.get(ii - 1).get(DBUtils.DBCol.COL_EMAIL);
+                            String email = dbvalues.get(ii - FUN_KEY).get(DBUtils.DBCol.COL_EMAIL);
                             if (TextUtils.isEmpty(email)) {
                                 return;
                             }
@@ -128,7 +176,7 @@ public class ContactsActivity extends ListActivity implements AdapterView.OnItem
                             startActivity(Intent.createChooser(intent,"choose your Email app"));
                         }
                     })
-                    .setCancelable(false)
+                    .setCancelable(true)
                     .create().show();
         }
     }
@@ -145,7 +193,7 @@ public class ContactsActivity extends ListActivity implements AdapterView.OnItem
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         try{
-                            HashMap<String,String> current = dbvalues.get(ii-1);
+                            HashMap<String,String> current = dbvalues.get(ii-FUN_KEY);
                             ContentValues cvalue = new ContentValues();
                             cvalue.put(DBUtils.DBCol.COL_NAME,current.get(DBUtils.DBCol.COL_NAME));
                             cvalue.put(DBUtils.DBCol.COL_PHONE,current.get(DBUtils.DBCol.COL_PHONE));
