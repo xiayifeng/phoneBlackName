@@ -38,12 +38,6 @@ public class DBUtils {
         }
     }
 
-    public void update(){
-        if (dbHelper != null){
-            dbHelper.onUpgrade(dbHelper.getWritableDatabase(),1,1);
-        }
-    }
-
     public boolean isDBInit(){
         if(dbHelper == null){
             return false;
@@ -73,7 +67,7 @@ public class DBUtils {
 
     public void updateDB(ContentValues contentValues){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.update(DBCol.TABLENAME,contentValues,DBCol.COL_PHONE + "= ?",new String[] {contentValues.getAsString(DBCol.COL_PHONE)});
+        db.update(DBCol.TABLENAME, contentValues, DBCol.COL_PHONE + "= ?", new String[]{contentValues.getAsString(DBCol.COL_PHONE)});
         db.close();
     }
 

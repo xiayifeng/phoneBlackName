@@ -14,7 +14,6 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         DBUtils.getInstances().initDB(this);
-        DBUtils.getInstances().update();
     }
 
     private List<HashMap<String,String>> searchReuslt;
