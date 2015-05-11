@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,8 @@ import android.widget.RadioGroup;
 
 import java.io.*;
 import java.security.MessageDigest;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by sh-xiayf on 15-4-30.
@@ -28,6 +31,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
 
     private EditText filepath;
     private Button importbutton;
+    private Button exportButton;
     private Button showlist;
     private RadioGroup mode_rg;
     private RadioButton black_mode;
@@ -40,12 +44,14 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
 
         filepath = (EditText) findViewById(R.id.filepath);
         importbutton = (Button) findViewById(R.id.importbutton);
+        exportButton = (Button) findViewById(R.id.exportbutton);
         showlist = (Button) findViewById(R.id.contactlist);
         mode_rg = (RadioGroup) findViewById(R.id.mode_rg);
         black_mode = (RadioButton) findViewById(R.id.mode_rb_black);
         white_mode = (RadioButton) findViewById(R.id.mode_rb_white);
 
         importbutton.setOnClickListener(this);
+        exportButton.setOnClickListener(this);
         showlist.setOnClickListener(this);
         filepath.setOnClickListener(this);
 
@@ -104,15 +110,16 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
                     BufferedReader br = new BufferedReader(new InputStreamReader(is));
                     String line = "";
                     while ((line = br.readLine()) != null){
-                        Log.e("xyf",String.format("line(%s)",line));
                         String[] users = line.split(",");
-                        if (users.length != 3){
+                        Log.e("xyf",String.format("line(%s)users.length(%d)",line,users.length));
+                        if (users.length != 4){
                             continue;
                         }
                         ContentValues contentValues = new ContentValues();
                         contentValues.put(DBUtils.DBCol.COL_NAME,users[0]);
                         contentValues.put(DBUtils.DBCol.COL_PHONE,users[1]);
                         contentValues.put(DBUtils.DBCol.COL_EMAIL,users[2]);
+                        contentValues.put(DBUtils.DBCol.COL_COMPANYPHONE,users[3]);
                         DBUtils.getInstances().insertDB(contentValues);
                     }
                     br.close();
@@ -164,7 +171,55 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
         }else if(view.getId() == R.id.filepath){
             Intent intent =  new Intent(MainActivity.this,FileActivity.class);
             startActivityForResult(intent,LIST_CODE);
+        }else if(view.getId() == R.id.exportbutton){
+            if (FileUtils.isExendStorageExits() && !TextUtils.isEmpty(FileUtils.getExtendPath()) && !DBUtils.getInstances().isDBNull()){
+                exportContacts();
+            }
         }
+    }
+
+    public void exportContacts(){
+        final String path = FileUtils.getExtendPath();
+        new AlertDialog.Builder(this).setTitle("notification")
+                .setMessage("contacts while export to \""+ path +"/contacts.csv\"?")
+                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        ShowProcessDialog(MainActivity.this,"exporting ...");
+                        try{
+                            Log.e("xyf","begin export");
+                            List<HashMap<String,String>> result = DBUtils.getInstances().getAllContacts();
+                            File dstFile = new File(path + File.separator + "contact.csv");
+                            if(dstFile.exists()){
+                                dstFile.delete();
+                            }
+                            dstFile.createNewFile();
+                            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(dstFile)));
+                            for (HashMap<String,String> map : result){
+                                String name = map.get(DBUtils.DBCol.COL_NAME);
+                                String phone = map.get(DBUtils.DBCol.COL_PHONE);
+                                String email = map.get(DBUtils.DBCol.COL_EMAIL);
+                                String compayphone = map.get(DBUtils.DBCol.COL_COMPANYPHONE);
+                                String content = name + "," + phone + "," + email + "," + compayphone + "\n";
+                                bw.write(content);
+                            }
+                            bw.flush();
+                            bw.close();
+                            Log.e("xyf","end export");
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        DismissProcessDialog(MainActivity.this);
+                    }
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .setCancelable(false)
+                .create().show();
     }
 
     private static final int LIST_CODE = 1101;

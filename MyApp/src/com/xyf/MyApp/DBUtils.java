@@ -38,6 +38,12 @@ public class DBUtils {
         }
     }
 
+    public void update(){
+        if (dbHelper != null){
+            dbHelper.onUpgrade(dbHelper.getWritableDatabase(),1,1);
+        }
+    }
+
     public boolean isDBInit(){
         if(dbHelper == null){
             return false;
@@ -99,10 +105,12 @@ public class DBUtils {
                 String username = c.getString(c.getColumnIndex(DBCol.COL_NAME));
                 String userphone = c.getString(c.getColumnIndex(DBCol.COL_PHONE));
                 String useremail = c.getString(c.getColumnIndex(DBCol.COL_EMAIL));
+                String companyphone = c.getString(c.getColumnIndex(DBCol.COL_COMPANYPHONE));
 
                 map.put(DBCol.COL_NAME,username);
                 map.put(DBCol.COL_PHONE,userphone);
                 map.put(DBCol.COL_EMAIL,useremail);
+                map.put(DBCol.COL_COMPANYPHONE,companyphone);
                 result.add(map);
             }while (c.moveToNext());
 
@@ -127,11 +135,13 @@ public class DBUtils {
             String username = c.getString(c.getColumnIndex(DBCol.COL_NAME));
             String userphone = c.getString(c.getColumnIndex(DBCol.COL_PHONE));
             String useremail = c.getString(c.getColumnIndex(DBCol.COL_EMAIL));
+            String companyphone = c.getString(c.getColumnIndex(DBCol.COL_COMPANYPHONE));
 
             HashMap<String,String> result = new HashMap<String, String>();
             result.put(DBCol.COL_NAME,username);
             result.put(DBCol.COL_PHONE,userphone);
             result.put(DBCol.COL_EMAIL,useremail);
+            result.put(DBCol.COL_COMPANYPHONE,companyphone);
 
             c.close();
             db.close();
@@ -152,6 +162,7 @@ public class DBUtils {
         public static final String COL_NAME = "username";
         public static final String COL_PHONE = "userphone";
         public static final String COL_EMAIL = "useremail";
+        public static final String COL_COMPANYPHONE = "companyphone";
     }
 
 
@@ -171,13 +182,14 @@ public class DBUtils {
                     + DBCol._ID + " INTEGER PRIMARY KEY,"
                     + DBCol.COL_NAME + " TEXT,"
                     + DBCol.COL_EMAIL + " TEXT,"
+                    + DBCol.COL_COMPANYPHONE + " TEXT,"
                     + DBCol.COL_PHONE + " TEXT NOT NULL)";
             sqLiteDatabase.execSQL(sql);
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-            String sql = "DROP TABLE " + DBCol.TABLENAME + " IF EXITS";
+            String sql = "DROP TABLE " + "IF EXISTS " + DBCol.TABLENAME +";";
             sqLiteDatabase.execSQL(sql);
             onCreate(sqLiteDatabase);
         }

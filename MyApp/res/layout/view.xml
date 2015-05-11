@@ -20,6 +20,10 @@
             android:text="@string/mark_import"
             />
 
+    <Button android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:id="@+id/exportbutton"
+            android:text="@string/mark_export"/>
+
     <Button android:id="@+id/contactlist"
             android:text="@string/mark_contacts_list"
             android:layout_width="match_parent"

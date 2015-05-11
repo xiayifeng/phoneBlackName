@@ -37,6 +37,7 @@ public class ContactsAdapter extends BaseAdapter {
         TextView txt1;
         TextView txt2;
         TextView txt3;
+        TextView txt4;
     }
 
     @Override
@@ -90,6 +91,7 @@ public class ContactsAdapter extends BaseAdapter {
             mHolder.txt1 = (TextView) view.findViewById(R.id.text1);
             mHolder.txt2 = (TextView) view.findViewById(R.id.text2);
             mHolder.txt3 = (TextView) view.findViewById(R.id.text3);
+            mHolder.txt4 = (TextView) view.findViewById(R.id.text4);
 
             view.setTag(mHolder);
         }else{
@@ -110,9 +112,31 @@ public class ContactsAdapter extends BaseAdapter {
 
             HashMap<String,String> current = contacts.get(i-2);
 
-            mHolder.txt1.setText(current.get(DBUtils.DBCol.COL_NAME));
-            mHolder.txt2.setText(current.get(DBUtils.DBCol.COL_PHONE));
-            mHolder.txt3.setText(current.get(DBUtils.DBCol.COL_EMAIL));
+            String col_name = current.get(DBUtils.DBCol.COL_NAME);
+            String col_email = current.get(DBUtils.DBCol.COL_EMAIL);
+            String col_phone = current.get(DBUtils.DBCol.COL_PHONE);
+            String col_companyphone = current.get(DBUtils.DBCol.COL_COMPANYPHONE);
+
+            if (col_phone.equals("null")){
+                col_name = "";
+            }
+
+            if (col_companyphone.equals("null")){
+                col_companyphone = "";
+            }
+
+            if (col_email.equals("null")){
+                col_email = "";
+            }
+
+            if (col_name.equals("null")){
+                col_name = "";
+            }
+
+            mHolder.txt1.setText(col_name);
+            mHolder.txt2.setText(col_phone);
+            mHolder.txt3.setText(col_email);
+            mHolder.txt4.setText(col_companyphone);
         }
 
         return view;
