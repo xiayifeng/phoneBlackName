@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.media.AudioManager;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -33,6 +34,7 @@ public class MainService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        aManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 
         tm.listen(new MyPhoneStateListener(),PhoneStateListener.LISTEN_CALL_STATE);
@@ -49,6 +51,7 @@ public class MainService extends Service {
             switch (state){
                 case TelephonyManager.CALL_STATE_IDLE:
                     HideFloatView();
+                    resetRingerMode();
                     break;
 
                 case TelephonyManager.CALL_STATE_RINGING:
@@ -71,11 +74,15 @@ public class MainService extends Service {
                             endCall();
                             HideFloatView();
                         }
+                        if (SharedPrefUtils.getMode(MainService.this).equals("quiet")){
+                            setSlientMode();
+                        }
                     }
                     break;
 
                 case TelephonyManager.CALL_STATE_OFFHOOK:
                     HideFloatView();
+                    resetRingerMode();
                     break;
 
                 default:
@@ -88,6 +95,26 @@ public class MainService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    AudioManager aManager;
+    private static int lastMode = -1;
+    private static int vibrateMode = -1;
+
+    public void setSlientMode(){
+        lastMode = aManager.getRingerMode();
+        vibrateMode = aManager.getVibrateSetting(AudioManager.VIBRATE_TYPE_RINGER);
+        aManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+        aManager.setVibrateSetting(AudioManager.VIBRATE_TYPE_RINGER,AudioManager.VIBRATE_SETTING_OFF);
+    }
+
+    public void resetRingerMode(){
+        if (lastMode != -1){
+            aManager.setRingerMode(lastMode);
+        }
+        if (vibrateMode != -1){
+            aManager.setVibrateSetting(AudioManager.VIBRATE_TYPE_RINGER,AudioManager.VIBRATE_SETTING_ON);
+        }
     }
 
 

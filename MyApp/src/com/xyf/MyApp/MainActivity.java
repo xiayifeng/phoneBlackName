@@ -36,6 +36,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
     private RadioGroup mode_rg;
     private RadioButton black_mode;
     private RadioButton white_mode;
+    private RadioButton quiet_mode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
         mode_rg = (RadioGroup) findViewById(R.id.mode_rg);
         black_mode = (RadioButton) findViewById(R.id.mode_rb_black);
         white_mode = (RadioButton) findViewById(R.id.mode_rb_white);
+        quiet_mode = (RadioButton) findViewById(R.id.mode_rb_quiet);
 
         importbutton.setOnClickListener(this);
         exportButton.setOnClickListener(this);
@@ -66,6 +68,8 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
             black_mode.setChecked(true);
         }else if(mode.equals("white")){
             white_mode.setChecked(true);
+        }else if(mode.equals("quiet")){
+            quiet_mode.setChecked(true);
         }
 
 
@@ -239,6 +243,8 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
             SharedPrefUtils.saveMode(this,"white");
         }else if(radioGroup.getCheckedRadioButtonId() == R.id.mode_rb_black){
             SharedPrefUtils.saveMode(this,"black");
+        }else if(radioGroup.getCheckedRadioButtonId() == R.id.mode_rb_quiet){
+            SharedPrefUtils.saveMode(this,"quiet");
         }
     }
 
