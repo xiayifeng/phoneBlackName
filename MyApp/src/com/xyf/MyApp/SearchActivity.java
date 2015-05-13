@@ -65,6 +65,7 @@ public class SearchActivity extends ListActivity implements AdapterView.OnItemCl
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String email = dbvalues.get(ii).get(DBUtils.DBCol.COL_EMAIL);
                         if (TextUtils.isEmpty(email)) {
+                            ToastUtils.showToast(SearchActivity.this,"no email address to send");
                             return;
                         }
                         Intent intent = new Intent(Intent.ACTION_SEND);

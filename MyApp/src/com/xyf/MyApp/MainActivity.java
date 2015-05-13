@@ -33,6 +33,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
     private Button importbutton;
     private Button exportButton;
     private Button showlist;
+    private Button localcontacts;
     private RadioGroup mode_rg;
     private RadioButton black_mode;
     private RadioButton white_mode;
@@ -47,6 +48,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
         importbutton = (Button) findViewById(R.id.importbutton);
         exportButton = (Button) findViewById(R.id.exportbutton);
         showlist = (Button) findViewById(R.id.contactlist);
+        localcontacts = (Button) findViewById(R.id.localcontacts);
         mode_rg = (RadioGroup) findViewById(R.id.mode_rg);
         black_mode = (RadioButton) findViewById(R.id.mode_rb_black);
         white_mode = (RadioButton) findViewById(R.id.mode_rb_white);
@@ -56,6 +58,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
         exportButton.setOnClickListener(this);
         showlist.setOnClickListener(this);
         filepath.setOnClickListener(this);
+        localcontacts.setOnClickListener(this);
 
         mode_rg.setOnCheckedChangeListener(this);
 
@@ -179,6 +182,9 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
             if (FileUtils.isExendStorageExits() && !TextUtils.isEmpty(FileUtils.getExtendPath()) && !DBUtils.getInstances().isDBNull()){
                 exportContacts();
             }
+        }else if(view.getId() == R.id.localcontacts){
+            Intent intent = new Intent(MainActivity.this,LocalContactsActivity.class);
+            startActivity(intent);
         }
     }
 

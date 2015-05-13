@@ -20,10 +20,23 @@ public class ContactsAdapter extends BaseAdapter {
 
     private List<HashMap<String,String>> contacts;
     private Context myContext;
+    private boolean mAdd;
+    private boolean mSearch;
+    private int key = 0;
 
-    public ContactsAdapter(Context myContext,List<HashMap<String,String>> list){
+    public ContactsAdapter(Context myContext,List<HashMap<String,String>> list,boolean add ,boolean search){
         this.myContext = myContext;
         this.contacts = list;
+        this.mAdd = add;
+        this.mSearch = search;
+        if (add) {
+            key ++;
+        }
+        if (search) {
+            key ++;
+        }
+
+        Log.e("xyf",String.format("___key(%d)",key));
     }
 
     public void setContacts(List<HashMap<String, String>> contacts) {
@@ -42,15 +55,18 @@ public class ContactsAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return contacts.size() + 2;
+        return contacts.size() + key;
     }
 
     @Override
     public Object getItem(int i) {
-        if(i == 0 || i == 1){
+        if (i == 0 && key > 0){
             return new TextView(myContext);
         }
-        return contacts.get(i-2);
+        if (i == 1 && key > 1){
+            return new TextView(myContext);
+        }
+        return contacts.get(i-key);
     }
 
     @Override
@@ -98,11 +114,13 @@ public class ContactsAdapter extends BaseAdapter {
             mHolder = (ViewHolder) view.getTag();
         }
 
-        if (i == 0){
+        if (i == 1 && mAdd){
+            Log.e("xyf","add item");
             mHolder.oneLayout.setVisibility(View.VISIBLE);
             mHolder.twoLayout.setVisibility(View.GONE);
             mHolder.add.setText("Add");
-        }else if(i == 1){
+        }else if(i == 0 && mSearch){
+            Log.e("xyf","search item");
             mHolder.oneLayout.setVisibility(View.VISIBLE);
             mHolder.twoLayout.setVisibility(View.GONE);
             mHolder.add.setText("Search");
@@ -110,7 +128,8 @@ public class ContactsAdapter extends BaseAdapter {
             mHolder.oneLayout.setVisibility(View.GONE);
             mHolder.twoLayout.setVisibility(View.VISIBLE);
 
-            HashMap<String,String> current = contacts.get(i-2);
+            Log.e("xyf",String.format("___i(%d)contacts.size(%d)",i,contacts.size()));
+            HashMap<String,String> current = contacts.get(i-key);
 
             String col_name = current.get(DBUtils.DBCol.COL_NAME);
             String col_email = current.get(DBUtils.DBCol.COL_EMAIL);
@@ -121,11 +140,11 @@ public class ContactsAdapter extends BaseAdapter {
                 col_name = "";
             }
 
-            if (col_companyphone.equals("null")){
+            if (col_companyphone == null || col_companyphone.equals("null")){
                 col_companyphone = "";
             }
 
-            if (col_email.equals("null")){
+            if (col_email == null || col_email.equals("null")){
                 col_email = "";
             }
 

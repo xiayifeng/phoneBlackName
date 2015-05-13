@@ -29,6 +29,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+    <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/localcontacts"
+            android:text="@string/mark_local_contacts"/>
+
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,6 +57,9 @@
                     android:text="@string/mark_white_name_mode"
                     android:paddingLeft="5dip" android:id="@+id/mode_rb_white"
                     />
+            <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="@string/mark_quiet_mode"
+                    android:paddingLeft="5dip" android:id="@+id/mode_rb_quiet"/>
         </RadioGroup>
     </LinearLayout>
 

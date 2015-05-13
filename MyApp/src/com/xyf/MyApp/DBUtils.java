@@ -159,6 +159,13 @@ public class DBUtils {
         public static final String COL_COMPANYPHONE = "companyphone";
     }
 
+    public class BlackCol implements BaseColumns {
+        public static final String TABLENAME = "blacktable";
+    }
+
+    public class WhiteCol implements BaseColumns {
+        public static final String TABLENAME = "whitetable";
+    }
 
     class DBOpenHelper extends SQLiteOpenHelper{
 

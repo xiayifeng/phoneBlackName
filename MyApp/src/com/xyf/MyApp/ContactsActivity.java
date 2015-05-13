@@ -46,7 +46,7 @@ public class ContactsActivity extends ListActivity implements AdapterView.OnItem
         }
 
         dbvalues = DBUtils.getInstances().getAllContacts();
-        setListAdapter(new ContactsAdapter(this,dbvalues));
+        setListAdapter(new ContactsAdapter(this,dbvalues,true,true));
     }
 
     private void parseListView(){
@@ -91,7 +91,7 @@ public class ContactsActivity extends ListActivity implements AdapterView.OnItem
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, final int ii, long l) {
-        if ( ii == 0 ){
+        if ( ii == 1 ){
             View contentView = LayoutInflater.from(this).inflate(com.xyf.MyApp.R.layout.inputdialog,null);
             final EditText username = (EditText) contentView.findViewById(com.xyf.MyApp.R.id.inputdialog_name);
             final EditText telephone = (EditText) contentView.findViewById(com.xyf.MyApp.R.id.inputdialog_phone);
@@ -122,7 +122,7 @@ public class ContactsActivity extends ListActivity implements AdapterView.OnItem
                     })
                     .setCancelable(false)
                     .create().show();
-        }else if(ii == 1){
+        }else if(ii == 0){
             View contentView = LayoutInflater.from(this).inflate(com.xyf.MyApp.R.layout.search,null);
             final EditText searchMessage = (EditText) contentView.findViewById(com.xyf.MyApp.R.id.search_edit);
             new AlertDialog.Builder(this).setTitle("Search")
@@ -184,7 +184,7 @@ public class ContactsActivity extends ListActivity implements AdapterView.OnItem
     @Override
     public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int ii, long l) {
 
-        if (ii == 0 ){
+        if (ii == 0 || ii == 1){
             return true;
         }
         new AlertDialog.Builder(this).setTitle("notification")
