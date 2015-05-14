@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -50,7 +52,7 @@ public class MainService extends Service {
 
             switch (state){
                 case TelephonyManager.CALL_STATE_IDLE:
-                    HideFloatView();
+//                    HideFloatView();
                     resetRingerMode();
                     break;
 
@@ -66,13 +68,19 @@ public class MainService extends Service {
 
                     if (rslt != null){
                         String name = rslt.get(DBUtils.DBCol.COL_NAME);
+                        if (SharedPrefUtils.getMode(MainService.this).equals("black")){
+                            endCall();
+                            return;
+                        }
                         if (!TextUtils.isEmpty(name)){
                             Log.e("xyf",String.format("calling(%s)",name));
                             showFloatView(name);
-                        }
-                        if (SharedPrefUtils.getMode(MainService.this).equals("black")){
-                            endCall();
-                            HideFloatView();
+                            serviceHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    HideFloatView();
+                                }
+                            },5000);
                         }
                         if (SharedPrefUtils.getMode(MainService.this).equals("quiet")){
                             setSlientMode();
@@ -81,7 +89,7 @@ public class MainService extends Service {
                     break;
 
                 case TelephonyManager.CALL_STATE_OFFHOOK:
-                    HideFloatView();
+//                    HideFloatView();
                     resetRingerMode();
                     break;
 
@@ -91,6 +99,8 @@ public class MainService extends Service {
             }
         }
     }
+
+    private Handler serviceHandler = new Handler(Looper.getMainLooper());
 
     @Override
     public void onDestroy() {
