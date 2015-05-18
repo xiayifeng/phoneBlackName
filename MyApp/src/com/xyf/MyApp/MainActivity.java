@@ -34,6 +34,8 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
     private Button exportButton;
     private Button showlist;
     private Button localcontacts;
+    private Button AppManager;
+    private Button RunningService;
     private RadioGroup mode_rg;
     private RadioButton black_mode;
     private RadioButton white_mode;
@@ -49,6 +51,8 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
         exportButton = (Button) findViewById(R.id.exportbutton);
         showlist = (Button) findViewById(R.id.contactlist);
         localcontacts = (Button) findViewById(R.id.localcontacts);
+        AppManager = (Button) findViewById(R.id.appmanager);
+        RunningService = (Button) findViewById(R.id.runningservice);
         mode_rg = (RadioGroup) findViewById(R.id.mode_rg);
         black_mode = (RadioButton) findViewById(R.id.mode_rb_black);
         white_mode = (RadioButton) findViewById(R.id.mode_rb_white);
@@ -59,6 +63,8 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
         showlist.setOnClickListener(this);
         filepath.setOnClickListener(this);
         localcontacts.setOnClickListener(this);
+        AppManager.setOnClickListener(this);
+        RunningService.setOnClickListener(this);
 
         mode_rg.setOnCheckedChangeListener(this);
 
@@ -184,6 +190,12 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
             }
         }else if(view.getId() == R.id.localcontacts){
             Intent intent = new Intent(MainActivity.this,LocalContactsActivity.class);
+            startActivity(intent);
+        }else if(view.getId() == R.id.appmanager){
+            Intent intent = new Intent(MainActivity.this,AppManagerActivity.class);
+            startActivity(intent);
+        }else if(view.getId() == R.id.runningservice){
+            Intent intent = new Intent(MainActivity.this,RunningServiceActivity.class);
             startActivity(intent);
         }
     }
