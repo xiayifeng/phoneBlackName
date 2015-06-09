@@ -51,6 +51,12 @@
                 android:text="@string/mark_running_service"
                 />
 
+        <Button android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/deivceinfo"
+                android:text="@string/mark_device_info"
+                />
+
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

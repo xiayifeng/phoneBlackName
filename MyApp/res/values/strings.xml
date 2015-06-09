@@ -13,5 +13,6 @@
     <string name="mark_local_contacts">local contacts</string>
     <string name="mark_app_manager">App Manager</string>
     <string name="mark_running_service">Running Service</string>
+    <string name="mark_device_info">Device info</string>
 
 </resources>

@@ -36,6 +36,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
     private Button localcontacts;
     private Button AppManager;
     private Button RunningService;
+    private Button deviceInfo;
     private RadioGroup mode_rg;
     private RadioButton black_mode;
     private RadioButton white_mode;
@@ -53,6 +54,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
         localcontacts = (Button) findViewById(R.id.localcontacts);
         AppManager = (Button) findViewById(R.id.appmanager);
         RunningService = (Button) findViewById(R.id.runningservice);
+        deviceInfo = (Button) findViewById(R.id.deivceinfo);
         mode_rg = (RadioGroup) findViewById(R.id.mode_rg);
         black_mode = (RadioButton) findViewById(R.id.mode_rb_black);
         white_mode = (RadioButton) findViewById(R.id.mode_rb_white);
@@ -65,6 +67,7 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
         localcontacts.setOnClickListener(this);
         AppManager.setOnClickListener(this);
         RunningService.setOnClickListener(this);
+        deviceInfo.setOnClickListener(this);
 
         mode_rg.setOnCheckedChangeListener(this);
 
@@ -82,10 +85,25 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
         }
 
 
-        if (DBUtils.getInstances().isDBInit() && DBUtils.getInstances().isDBNull()){
+        if (DBUtils.getInstances().isDBInit() && DBUtils.getInstances().isDBNull() && isAssetsFileExits("phone")){
             showImportToast();
         }
 
+    }
+
+    private boolean isAssetsFileExits(String totalPath){
+        try {
+            String[] files = getAssets().list("");
+            for (String tmp : files){
+                if (tmp.equals(totalPath)){
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     private void showImportToast(){
@@ -196,6 +214,9 @@ public class MainActivity extends Activity implements View.OnClickListener,Radio
             startActivity(intent);
         }else if(view.getId() == R.id.runningservice){
             Intent intent = new Intent(MainActivity.this,RunningServiceActivity.class);
+            startActivity(intent);
+        }else if (view.getId() == R.id.deivceinfo){
+            Intent intent = new Intent(MainActivity.this,DeviceActivity.class);
             startActivity(intent);
         }
     }

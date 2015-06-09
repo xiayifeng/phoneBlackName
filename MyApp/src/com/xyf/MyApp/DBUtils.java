@@ -26,8 +26,10 @@ public class DBUtils {
     private static DBUtils instances;
 
     public static DBUtils getInstances(){
-        if (instances == null){
-            instances = new DBUtils();
+        synchronized (DBUtils.class){
+            if (instances == null){
+                instances = new DBUtils();
+            }
         }
         return instances;
     }
@@ -46,12 +48,15 @@ public class DBUtils {
         return true;
     }
 
-    public void insertDB(ContentValues contentValues){
+    public synchronized void insertDB(ContentValues contentValues){
         HashMap<String,String> reuslt = queryDB(DBCol.COL_PHONE,contentValues.getAsString(DBCol.COL_PHONE));
 
         if(reuslt == null){
             SQLiteDatabase db = dbHelper.getWritableDatabase();
+            db.beginTransaction();
             db.insert(DBCol.TABLENAME, DBCol.COL_NAME, contentValues);
+            db.setTransactionSuccessful();
+            db.endTransaction();
             db.close();
         }else{
             SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -59,15 +64,21 @@ public class DBUtils {
         }
     }
 
-    public void deleteDB(ContentValues contentValues){
+    public synchronized void deleteDB(ContentValues contentValues){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
         db.delete(DBCol.TABLENAME,DBCol.COL_PHONE + "= ? ", new String[]{contentValues.getAsString(DBCol.COL_PHONE)});
+        db.setTransactionSuccessful();
+        db.endTransaction();
         db.close();
     }
 
-    public void updateDB(ContentValues contentValues){
+    public synchronized void updateDB(ContentValues contentValues){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
         db.update(DBCol.TABLENAME, contentValues, DBCol.COL_PHONE + "= ?", new String[]{contentValues.getAsString(DBCol.COL_PHONE)});
+        db.setTransactionSuccessful();
+        db.endTransaction();
         db.close();
     }
 
@@ -87,7 +98,7 @@ public class DBUtils {
         return flag;
     }
 
-    public List<HashMap<String,String>> getAllContacts(){
+    public synchronized List<HashMap<String,String>> getAllContacts(){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor c = db.query(DBCol.TABLENAME,null,null,null,null,null,null,null);
@@ -120,7 +131,7 @@ public class DBUtils {
         return null;
     }
 
-    public HashMap<String,String> queryDB(String name,String value){
+    public synchronized HashMap<String,String> queryDB(String name,String value){
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         Cursor c = db.query(DBCol.TABLENAME, null, name + " = ?", new String[]{value}, null, null, null);
